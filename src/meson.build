@@ -55,7 +55,7 @@ if get_option('devicetree-vpd')
     executable(
         'devicetree-vpd-parsed',
         'dt-vpd-parser.cpp',
-		'machinecontext.cpp',
+        'machinecontext.cpp',
         cpp_args: cpp_args_fd,
         dependencies: [
             sdbusplus,
@@ -65,4 +65,3 @@ if get_option('devicetree-vpd')
         install_dir: installdir,
     )
 endif
-

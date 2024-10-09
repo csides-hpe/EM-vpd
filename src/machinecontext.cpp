@@ -15,62 +15,34 @@
 */
 
 #include "machinecontext.hpp"
-
 #include <fstream>
-#include <map>
 
-namespace DTParse
+constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::support_map()
 {
-
-static constexpr const char* node_base_path = "/proc/device-tree/";
-
-enum SupportedNode
-{
-    model,
-    serial_number
+    //could be swapped out for JSON input if future expansion required
+    
+    return {
+        //relative path to dt-node, d-bus object property to update
+        { "model", [&](auto v){ MachineContext::Asset::model(v); } },
+        { "serial-number", [&](auto v){ MachineContext::Asset::serial_number(v); }} 
+    };
 };
-
-// associate nodes with a path relative to node_base_path
-static const std::map<SupportedNode, std::string> node_rel_paths = {
-    {SupportedNode::model, "model"},
-    {SupportedNode::serial_number, "serial-number"}};
-}; // namespace DTParse
 
 void MachineContext::populateMachineContext()
 {
-    using DTNode = DTParse::SupportedNode;
-
     // walk supported node paths
-    for (std::pair<DTNode, std::string> node_data : DTParse::node_rel_paths)
+    for (auto& [nodeRelativePath, nodeUpdate] : support_map())
     {
+        std::string node_full_path = node_base_path + nodeRelativePath;
+        std::ifstream vpd_stream(node_full_path);
+        
         std::string node_value;
-
-        std::string node_rel_path = node_data.second;
-        std::string node_full_path = DTParse::node_base_path + node_rel_path;
-
-        std::ifstream vpd_stream;
-
-        vpd_stream.open(node_full_path);
 
         if (!vpd_stream || !std::getline(vpd_stream, node_value))
             continue;
 
-        switch (node_data.first)
-        {
-            case DTNode::model:
-
-                MachineContext::Asset::model(node_value);
-
-                break;
-
-            case DTNode::serial_number:
-
-                MachineContext::Asset::serial_number(node_value);
-
-                break;
-
-            default:
-                break;
-        }
+        nodeUpdate(node_value); //update d-bus property w/ mapped function
     }
 };
+
+

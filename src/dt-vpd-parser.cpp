@@ -2,14 +2,13 @@
 
 int main()
 {
-    constexpr auto path = "/xyz/openbmc_project/Inventory/MachineContext";
     sdbusplus::async::context ctx;
 
-    sdbusplus::server::manager_t manager{ctx, path};
+    sdbusplus::server::manager_t manager{ctx, MachineContext::dbus_object_path};
 
-    MachineContext c{ctx, path};
+    MachineContext c{ctx, MachineContext::dbus_object_path};
     ctx.spawn([](sdbusplus::async::context& ctx) -> sdbusplus::async::task<> {
-        ctx.request_name("xyz.openbmc_project.Inventory.MachineContext");
+        ctx.request_name(MachineContext::dbus_interface);
         co_return;
     }(ctx));
 

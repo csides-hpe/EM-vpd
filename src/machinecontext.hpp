@@ -18,7 +18,6 @@
 
 #include <sdbusplus/async.hpp>
 #include <xyz/openbmc_project/Inventory/Decorator/Asset/aserver.hpp>
-
 #include <map>
 
 class MachineContext :
@@ -28,10 +27,16 @@ class MachineContext :
   public:
     MachineContext(sdbusplus::async::context& ctx, auto path) :
         sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<
-            MachineContext>(ctx, path)
+            MachineContext>(ctx, std::forward<decltype(path)>(path))
     {
         populateMachineContext();
     }
 
+    static constexpr auto dbus_object_path = "/xyz/openbmc_project/MachineContext";
+    static constexpr auto dbus_interface = "xyz.openbmc_project.MachineContext";
+
+    static constexpr auto node_base_path = "/proc/device-tree/";
+
+    constexpr std::map<std::string, std::function<void(std::string)>> support_map();
     void populateMachineContext();
 };
