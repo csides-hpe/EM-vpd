@@ -19,7 +19,7 @@
 
 constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::support_map()
 {
-    //could be swapped out for JSON input if future expansion required
+    //could be swapped out for JSON input if future expansion requires
     
     return {
         //relative path to dt-node, d-bus object property to update
@@ -31,17 +31,16 @@ constexpr std::map<std::string, std::function<void(std::string)>> MachineContext
 void MachineContext::populateMachineContext()
 {
     // walk supported node paths
-    for (auto& [nodeRelativePath, nodeUpdate] : support_map())
+    for (auto& [nodeRelativePath, updateProp] : support_map())
     {
-        std::string node_full_path = node_base_path + nodeRelativePath;
-        std::ifstream vpd_stream(node_full_path);
+        std::ifstream vpd_stream(NodeBasePath + nodeRelativePath);
         
         std::string node_value;
 
         if (!vpd_stream || !std::getline(vpd_stream, node_value))
             continue;
 
-        nodeUpdate(node_value); //update d-bus property w/ mapped function
+        updateProp(node_value); //update d-bus property w/ mapped function
     }
 };
 

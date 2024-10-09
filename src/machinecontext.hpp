@@ -25,17 +25,16 @@ class MachineContext :
         Asset<MachineContext>
 {
   public:
+    static constexpr auto NodeBasePath = "/proc/device-tree/";
+    static constexpr auto ReqDBusPath = "/xyz/openbmc_project/MachineContext";
+    static constexpr auto ReqDBusInterface = "xyz.openbmc_project.MachineContext";
+
     MachineContext(sdbusplus::async::context& ctx, auto path) :
         sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<
             MachineContext>(ctx, std::forward<decltype(path)>(path))
     {
         populateMachineContext();
     }
-
-    static constexpr auto dbus_object_path = "/xyz/openbmc_project/MachineContext";
-    static constexpr auto dbus_interface = "xyz.openbmc_project.MachineContext";
-
-    static constexpr auto node_base_path = "/proc/device-tree/";
 
     constexpr std::map<std::string, std::function<void(std::string)>> support_map();
     void populateMachineContext();
