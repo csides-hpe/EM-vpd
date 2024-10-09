@@ -17,7 +17,7 @@
 #include "machinecontext.hpp"
 #include <fstream>
 
-constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::support_map()
+constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::nodeSupportMap()
 {
     //could be swapped out for JSON input if future expansion requires
     
@@ -31,16 +31,16 @@ constexpr std::map<std::string, std::function<void(std::string)>> MachineContext
 void MachineContext::populateMachineContext()
 {
     // walk supported node paths
-    for (auto& [nodeRelativePath, updateProp] : support_map())
+    for (const auto& [nodeRelativePath, updateProp] : nodeSupportMap())
     {
-        std::ifstream vpd_stream(NodeBasePath + nodeRelativePath);
-        
-        std::string node_value;
-
-        if (!vpd_stream || !std::getline(vpd_stream, node_value))
+        std::ifstream vpdStream(NodeBasePath + nodeRelativePath); //confirm node exists
+        if (!vpdStream)
             continue;
+        
+        std::string nodeVal;
 
-        updateProp(node_value); //update d-bus property w/ mapped function
+        if (std::getline(vpdStream, nodeVal))
+            updateProp(nodeVal); //update associated d-bus property w/ node contents
     }
 };
 
