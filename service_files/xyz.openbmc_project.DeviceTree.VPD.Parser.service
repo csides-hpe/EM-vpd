@@ -5,7 +5,7 @@ After=dbus.service
 [Service]
 ExecStart=/usr/libexec/entity-manager/devicetree-vpd-parserd
 Type=dbus
-BusName=xyz.openbmc_project.Inventory.MachineContext
+BusName=xyz.openbmc_project.MachineContext
 
 [Install]
 WantedBy=basic.target
