@@ -3,7 +3,7 @@ Description=Makes data from device-tree nodes avaliable thru D-Bus
 After=dbus.service
 
 [Service]
-ExecStart=/usr/libexec/entity-manager/devicetree-vpd-parserd
+ExecStart=/usr/libexec/entity-manager/devicetree-vpd-parsed
 Type=dbus
 BusName=xyz.openbmc_project.MachineContext
 
