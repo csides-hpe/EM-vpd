@@ -3,7 +3,6 @@
 auto startup(sdbusplus::async::context& ctx) -> sdbusplus::async::task<>
  {
     sdbusplus::server::manager_t manager{ctx, MachineContext::ReqDBusPath};
-    MachineContext c{ctx, MachineContext::ReqDBusPath};
 
     ctx.request_name(MachineContext::ReqDBusInterface);
     co_return;
@@ -12,7 +11,8 @@ auto startup(sdbusplus::async::context& ctx) -> sdbusplus::async::task<>
 int main()
 {
     sdbusplus::async::context ctx;
-
+    MachineContext c{ctx, MachineContext::ReqDBusPath};
+ 
     ctx.spawn(startup(ctx));
     ctx.run();
 
