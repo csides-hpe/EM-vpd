@@ -15,17 +15,18 @@
 */
 
 #include "machinecontext.hpp"
+
 #include <fstream>
 
-constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::nodeSupportMap()
+constexpr std::map<std::string, std::function<void(std::string)>>
+    MachineContext::nodeSupportMap()
 {
-    //could be swapped out for JSON input if future expansion requires
-    
-    return {
-        //relative path to dt-node, d-bus object property to update
-        { "model", [&](auto v){ MachineContext::Asset::model(v); } },
-        { "serial-number", [&](auto v){ MachineContext::Asset::serial_number(v); }} 
-    };
+    // could be swapped out for JSON input if future expansion requires
+
+    return {// relative path to dt-node, d-bus object property to update
+            {"model", [&](auto v) { MachineContext::Asset::model(v); }},
+            {"serial-number",
+             [&](auto v) { MachineContext::Asset::serial_number(v); }}};
 };
 
 void MachineContext::populateMachineContext()
@@ -33,15 +34,15 @@ void MachineContext::populateMachineContext()
     // walk supported node paths
     for (const auto& [nodeRelativePath, updateProp] : nodeSupportMap())
     {
-        std::ifstream vpdStream(NodeBasePath + nodeRelativePath); //confirm node exists
+        std::ifstream vpdStream(
+            NodeBasePath + nodeRelativePath); // confirm node exists
         if (!vpdStream)
             continue;
-        
+
         std::string nodeVal;
 
         if (std::getline(vpdStream, nodeVal))
-            updateProp(nodeVal); //update associated d-bus property w/ node contents
+            updateProp(
+                nodeVal); // update associated d-bus property w/ node contents
     }
 };
-
-
