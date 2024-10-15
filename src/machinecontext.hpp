@@ -29,7 +29,7 @@ class MachineContext :
     static constexpr auto ReqDBusPath = "/xyz/openbmc_project/MachineContext";
     static constexpr auto ReqDBusInterface = "xyz.openbmc_project.MachineContext";
 
-    MachineContext(sdbusplus::async::context& ctx, auto path) :
+    explicit MachineContext(sdbusplus::async::context& ctx, auto path) :
         sdbusplus::aserver::xyz::openbmc_project::inventory::decorator::Asset<
             MachineContext>(ctx, std::forward<decltype(path)>(path))
     {
