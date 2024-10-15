@@ -17,7 +17,7 @@
 #include "machinecontext.hpp"
 #include <fstream>
 
-constexpr std::map<std::string, std::function<void(std::string)>> MachineContext::nodeSupportMap()
+const std::map<std::string, std::function<void(std::string)>> MachineContext::nodeSupportMap()
 {
     //could be swapped out for JSON input if future expansion requires
     
